@@ -15,7 +15,7 @@ export function mountLoading(root) {
 
   const title = document.createElement('div');
   title.className = 'loading-title';
-  title.textContent = 'СТРАННАЯ ВСТРЕЧА';
+  title.textContent = 'SANDSEA';
 
   const barWrap = document.createElement('div');
   barWrap.className = 'loading-bar';

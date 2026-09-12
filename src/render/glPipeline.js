@@ -2410,8 +2410,8 @@ export class GlPipeline {
       gl.enableVertexAttribArray(aPos);
       gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
       // Texture units are per-program state; re-point the samplers.
-      gl.uniform1i(this.u.sandPal, 1);
-      gl.uniform1i(this.u.skyPal, 2);
+      gl.uniform1i(this.u.sandPal, 0);
+      gl.uniform1i(this.u.skyPal, 1);
       gl.uniform1i(this.u.rainDropsTex, 4);
     } catch (e) {
       console.warn('Sandsea: the full shader did not link; staying on the preview.', e);

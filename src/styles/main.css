@@ -201,7 +201,7 @@ input[type="range"]::-moz-range-thumb {
   display: grid;
 }
 
-/* Custom tab panels (Сцена / Музыка) take their own internal layout —
+/* Custom tab panels (Scene) take their own internal layout —
    override the grid and strip nested-card chrome from the children. */
 .sea-tab-panel--custom { display: none; grid-template-columns: none; }
 .sea-tab-panel--custom.is-active { display: block; }
@@ -559,13 +559,13 @@ input[type="range"]::-moz-range-thumb {
   align-items: baseline;
   padding: 9px 14px;
   background: rgba(10, 7, 4, 0.66);
-  border: 1px solid rgba(232, 160, 74, 0.4);   /* Ryan — amber */
+  border: 1px solid rgba(232, 160, 74, 0.4);   /* accent — amber */
   border-radius: var(--border-radius-md);
   backdrop-filter: blur(2px);
 }
 .vega-sub.is-vega {
   background: rgba(8, 12, 18, 0.66);
-  border-color: rgba(120, 180, 220, 0.4);       /* Vega — cool blue */
+  border-color: rgba(120, 180, 220, 0.4);       /* accent — cool blue */
 }
 .vega-who {
   flex: none;
@@ -826,7 +826,7 @@ body.dlg-open .vega-sub {
   display: none !important;
 }
 
-/* --- Catalog palette (editor: вкладка «Каталог») ------------------------- */
+/* --- Catalog palette (unused in the renderer build) --------------------- */
 .cat-help {
   font-size: 11px;
   line-height: 1.45;
@@ -962,7 +962,7 @@ body.dlg-open .vega-sub {
   mask-image: radial-gradient(ellipse 58% 64% at 50% 44%, #000 52%, transparent 92%);
 }
 
-/* --- Editor placement gizmos (только в режиме «Редактор») ---------------- */
+/* --- Editor placement gizmos (unused in the renderer build) ------------- */
 .edit-layer {
   position: absolute;
   inset: 0;

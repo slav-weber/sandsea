@@ -32,11 +32,14 @@ export const SAND_PALETTES = {
   ],
 };
 
-// Важно: все три sky-палитры должны иметь ОДИНАКОВУЮ длину и t-позиции
-// стопов. blendedSkyStops смешивает их index-by-index — если длины не
-// совпадают, лишние стопы тихо обрезаются и градиент «рвётся» во время
-// переходов sunset↔night. Унифицированная схема [0, 0.2, 0.4, 0.6, 0.8, 1]
-// устраняет это.
+
+
+
+
+
+// NOTE: all three sky palettes must have the SAME number of stops at the same
+// t positions. blendedSkyStops mixes them index by index, so a mismatch silently
+// truncates the extra stops and tears the gradient during sunset/night blends.
 export const SKY_PALETTES = {
   classic: [
     [0.0, [22, 65, 135]],   // deep royal blue zenith
@@ -54,9 +57,9 @@ export const SKY_PALETTES = {
     [0.8, [241, 176, 139]], // peach
     [1.0, [245, 220, 175]], // pale cream horizon
   ],
-  // duneNight — все 6 стопов одного цвета: ночное небо однородное, а
-  // переходы sunset→night блендят 6→6 стопов и плавно «сплющивают»
-  // закатный градиент в однородную ночь без разрывов.
+
+
+
   duneNight: [
     [0.0, [28, 18, 52]],
     [0.2, [28, 18, 52]],

@@ -121,7 +121,7 @@ export class RainParticles {
     if (activeCount > 0 && !this._audioInited) this._initAudio();
     if (!this.audioNodes || !this.audioCtx) return;
     // Perceptual loudness ∝ sqrt(N). Cap 0.55 — louder than before
-    // (was 0.3), per "сочнее" request, still under clip.
+    // (was 0.3), a richer look, still under clip.
     const t = Math.min(1, Math.sqrt(activeCount / MAX_DROPS));
     const target = t * 0.55 * (this.effectsVolume ?? 1);
     const now = this.audioCtx.currentTime;

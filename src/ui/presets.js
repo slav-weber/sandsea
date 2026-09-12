@@ -2,9 +2,9 @@ import { PRESETS, PRESET_IDS, applyPreset } from '../config/presets.js';
 import { shareUrl } from '../state/persist.js';
 
 /**
- * Сцена tab. Two controls:
- *   - "Время суток" dropdown that jumps the clock to a preset moment
- *     (Утро / Полдень / Закат / Ночь). Each preset is a partial state
+ * Scene tab. Two controls:
+ *   - "Time of day" dropdown that jumps the clock to a preset moment
+ *     (Morning / Noon / Sunset / Night). Each preset is a partial state
  *     patch — only time + atmospheric haze, never the world itself.
  *   - Share link button.
  *
@@ -16,19 +16,19 @@ export function mountPresets(root, store, { onToast } = {}) {
   const bar = document.createElement('div');
   bar.className = 'preset-bar';
 
-  // --- Camera mode (Свободная камера / Игра) -----------------------------
+  // --- Camera mode (Free camera / Walk) -----------------------------
   const modeGroup = document.createElement('label');
   modeGroup.className = 'preset-group';
   const modeLab = document.createElement('span');
   modeLab.className = 'preset-group-label';
-  modeLab.textContent = 'Режим:';
+  modeLab.textContent = 'Mode:';
   modeGroup.appendChild(modeLab);
 
   const modeSelect = document.createElement('select');
   modeSelect.className = 'preset-select';
   for (const opt of [
-    { value: 'free', label: 'Свободная камера' },
-    { value: 'game', label: 'Игра' },
+    { value: 'free', label: 'Free camera' },
+    { value: 'game', label: 'Walk' },
   ]) {
     const o = document.createElement('option');
     o.value = opt.value;
@@ -49,7 +49,7 @@ export function mountPresets(root, store, { onToast } = {}) {
 
   const timeLab = document.createElement('span');
   timeLab.className = 'preset-group-label';
-  timeLab.textContent = 'Время суток:';
+  timeLab.textContent = 'Time of day:';
   timeGroup.appendChild(timeLab);
 
   const select = document.createElement('select');
@@ -85,14 +85,14 @@ export function mountPresets(root, store, { onToast } = {}) {
   // --- Share link -------------------------------------------------------
   const shareBtn = document.createElement('button');
   shareBtn.className = 'preset-btn share-btn';
-  shareBtn.textContent = 'Скопировать ссылку';
+  shareBtn.textContent = 'Copy link';
   shareBtn.addEventListener('click', async () => {
     const url = shareUrl(store.get());
     try {
       await navigator.clipboard.writeText(url);
-      onToast?.('Ссылка скопирована');
+      onToast?.('Link copied');
     } catch {
-      window.prompt('Скопируй ссылку:', url);
+      window.prompt('Copy this link:', url);
     }
   });
   bar.appendChild(shareBtn);

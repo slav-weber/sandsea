@@ -25,7 +25,7 @@ export function mountLoading(root) {
 
   const sub = document.createElement('div');
   sub.className = 'loading-sub';
-  sub.textContent = 'Компиляция шейдеров…';
+  sub.textContent = 'Compiling shaders…';
 
   box.appendChild(title);
   box.appendChild(barWrap);
@@ -54,8 +54,8 @@ export function mountLoading(root) {
     },
     fail(err) {
       done = true;
-      title.textContent = 'СБОЙ ЗАГРУЗКИ';
-      sub.textContent = 'Шейдер не скомпилировался. Открой консоль (F12) — там лог.';
+      title.textContent = 'FAILED TO START';
+      sub.textContent = 'The shader did not compile. Open the console (F12) for the log.';
       overlay.classList.add('is-error');
       console.error(err);
     },

@@ -4,7 +4,7 @@ const LS_KEY = 'sea-ui-active-tab';
 
 /**
  * Mounts a tabbed control panel into `root`. Built-in tabs come from
- * controlsByTab(); callers can inject extra tabs (Сцена / Музыка / …) via
+ * controlsByTab(); callers can inject extra tabs (Scene / …) via
  * `beforeTabs` and `afterTabs` — each is `{ name, mount(panelEl) }`. Active
  * tab persists across sessions via localStorage.
  */

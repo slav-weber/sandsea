@@ -29,7 +29,7 @@ export const defaults = {
   skyBands: 14,
   horizonY: 40,
   skyHeight: 130,
-  // hazeAmount removed — use weatherFog (Погода tab).
+  // hazeAmount removed — use weatherFog (Weather tab).
 
   // palettes (names from config/palettes.js)
   sandPalette: 'classic',
@@ -78,7 +78,7 @@ export const defaults = {
   // Audio
   musicVolume:   0.7,       // playlist player volume (0..1)
   effectsVolume: 0.7,       // weather audio (thunder, rain hiss) (0..1)
-  voiceEnabled: 1,          // диалоговый TTS (Web Speech) — вкл/выкл
+
 
   // post-fx
   smoothPixels: 0,    // 0 = crisp pixelated, 1 = bilinear (Sega CRT look)

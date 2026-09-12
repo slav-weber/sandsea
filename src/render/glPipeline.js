@@ -421,7 +421,7 @@ float sdRoundBox(vec3 p, vec3 b, float r) {
 
 // Spawn landmark: an overhanging rock shelf jutting out from the hill toward
 // the origin. The hill's smooth dome (in heightAt) is the walkable ramp; this
-// slab is the "нависающая скала" you can shelter under. Anchored to the hill
+// slab is the overhanging rock you can shelter under. Anchored to the hill
 // plateau height (uSpawnPlateauY) so it sits at the top edge. GPU-only — the
 // player walks under it; collision uses the heightfield + cave only.
 float spawnOverhangSDF(vec3 p) {
@@ -2370,7 +2370,7 @@ export class GlPipeline {
     upload1DPalette(this.gl, this.skyTex, data, SKY_N);
   }
 
-  render({ camera, sun, npcs = [], solids = [], placements = [], cave = null, light = null, spawnPlateauY = 0, fx = null, weather = null, time = null, fog = 0.3, bolt = null, rain = null }) {
+  render({ camera, sun, npcs = [], solids = [], placements = [], cave = null, light = null, spawnPlateauY = 0, fx = null, weather = null, time = null, fog = 0.3, bolt = null, rain = null, hero = null }) {
     if (!this._ready) return; // shader still compiling — frame loop shows the loader
     const gl = this.gl;
     const s = this.store.get();

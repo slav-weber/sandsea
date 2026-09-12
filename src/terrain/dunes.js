@@ -82,7 +82,7 @@ export function bakeChunk(cx, cz, params) {
     }
   }
 
-  // Базовый рельеф под дюнами — лёгкие волны + рябь
+  // Base relief under the dunes: gentle swells plus ripples
   for (let z = 0; z <= CHUNK; z++) {
     for (let x = 0; x <= CHUNK; x++) {
       const wx = baseX + x;

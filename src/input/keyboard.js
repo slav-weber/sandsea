@@ -21,7 +21,7 @@ const AXIS_KEYS = {
 
 const BOOST_KEYS = new Set(['ShiftLeft', 'ShiftRight']);
 
-const LIGHT_MODE_LABELS = ['выкл', 'фонарик', 'мягкий свет', 'фонарик + мягкий'];
+const LIGHT_MODE_LABELS = ['off', 'flashlight', 'soft light', 'flashlight + soft'];
 
 export function bindKeyboard(store, { canvas, hud, toast, actions = {}, getMode }) {
   const held = new Set();
@@ -83,7 +83,7 @@ export function bindKeyboard(store, { canvas, hud, toast, actions = {}, getMode 
         // World is locked outside the editor — no reseeding in the game.
         if (mode === 'editor') {
           store.set('seed', (Math.random() * 99999) | 0);
-          toast?.('Новый seed');
+          toast?.('New seed');
         }
         break;
       case 'KeyF':
@@ -95,14 +95,14 @@ export function bindKeyboard(store, { canvas, hud, toast, actions = {}, getMode 
       case 'KeyN': {
         const id = randomPresetId();
         applyPreset(store, id);
-        toast?.('Пресет: ' + id);
+        toast?.('Preset: ' + id);
         break;
       }
-      // Interactive tools on the number row (presets are on N / the Сцена tab).
+      // Interactive tools on the number row (presets are on N / the Scene tab).
       case 'Digit1': {
         const next = ((store.get('caveLightMode') | 0) + 1) % 4;
         store.set('caveLightMode', next);
-        toast?.('Фонарик: ' + LIGHT_MODE_LABELS[next]);
+        toast?.('Flashlight: ' + LIGHT_MODE_LABELS[next]);
         break;
       }
       case 'Digit2':
@@ -126,8 +126,8 @@ export function bindKeyboard(store, { canvas, hud, toast, actions = {}, getMode 
       case 'KeyI':
 
         break;
-      // Editor: B ставит выбранную в каталоге кисть, X удаляет ближайший
-      // к прицелу объект (действия сами игнорируются вне режима «Редактор»).
+
+
       case 'KeyB':
 
         break;

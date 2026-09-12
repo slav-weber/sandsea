@@ -44,8 +44,8 @@ export function renderTerrain({
   const sinY = Math.sin(camera.yaw);
   const cosY = Math.cos(camera.yaw);
 
-  // Effective horizon after pitch — tan(pitch)·focal даёт честную пин-хол
-  // проекцию (линейное приближение врёт на больших углах).
+  // Effective horizon after pitch: tan(pitch)·focal is the honest pinhole
+// projection (a linear approximation lies at large angles).
   const effHorizon = horizonY + Math.tan(camera.pitch) * camera.focal;
 
   // Shadows only make sense while the sun is above the horizon.

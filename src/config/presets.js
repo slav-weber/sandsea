@@ -9,19 +9,19 @@
 
 export const PRESETS = {
   morning: {
-    label: 'Утро',
+    label: 'Morning',
     state: { timeOfDay: 6 / 24, weatherFog: 0.40 },
   },
   noon: {
-    label: 'Полдень',
+    label: 'Noon',
     state: { timeOfDay: 12 / 24, weatherFog: 0.25 },
   },
   sunset: {
-    label: 'Закат',
+    label: 'Sunset',
     state: { timeOfDay: 19.5 / 24, weatherFog: 0.55 },
   },
   night: {
-    label: 'Ночь',
+    label: 'Night',
     state: { timeOfDay: 1 / 24, weatherFog: 0.20 },
   },
 };

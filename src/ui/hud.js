@@ -12,17 +12,17 @@ export function mountHud(parentEl, store, { getCamera, getTerrain, getAxes }) {
     <div class="hud-row" data-k="chunks">Chunks: <span>0 / 0</span></div>
     <div class="hud-row" data-k="dir">Motion: <span>idle</span></div>
     <div class="hud-hint">
-      WASD — движение • Space / C — вверх / вниз<br>
-      Shift — ускорение • P — пауза • R — seed<br>
-      F — fullscreen • H — скрыть HUD • N — пресет<br>
-      Click — захват мыши (ESC — освободить)
+      WASD — move • Space / C — up / down<br>
+      Shift — boost • P — pause • R — reseed<br>
+      F — fullscreen • H — hide HUD • N — next preset<br>
+      Click — capture mouse (ESC — release)
     </div>
   `;
   parentEl.appendChild(el);
 
   const lockHint = document.createElement('div');
   lockHint.className = 'pointer-lock-hint';
-  lockHint.textContent = 'Click to control camera';
+  lockHint.textContent = 'Click to control the camera';
   parentEl.appendChild(lockHint);
 
   const fpsEl = el.querySelector('[data-k="fps"] span');

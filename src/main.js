@@ -40,6 +40,8 @@ if (!SAND_PALETTES[initial.sandPalette]) initial.sandPalette = defaults.sandPale
 if (!SKY_PALETTES[initial.skyPalette]) initial.skyPalette = defaults.skyPalette;
 // The world identity is fixed: the same seed and dune parameters every visit.
 initial.seed = WORLD_SEED;
+// A poisoned value in localStorage or the URL must not survive a reload.
+if (!Number.isFinite(initial.cameraY)) initial.cameraY = defaults.cameraY;
 const store = createStore(initial);
 bindPersistence(store);
 
@@ -157,8 +159,10 @@ function frame(now) {
     if (axes.forward !== 0 || axes.strafe !== 0) {
       camera.move((axes.forward * sinY + axes.strafe * cosY) * sp, (axes.forward * cosY + axes.strafe * -sinY) * sp);
     }
-    if (axes.vertical !== 0) {
-      store.set('cameraY', Math.max(1, store.get('cameraY') + axes.vertical * sp));
+    if (axes.up !== 0) {
+      const y = store.get('cameraY');
+      const base = Number.isFinite(y) ? y : defaults.cameraY;
+      store.set('cameraY', Math.max(1, Math.min(400, base + axes.up * sp)));
     }
   }
 
@@ -194,7 +198,8 @@ function frame(now) {
   };
 
   // Walking into a cave mouth eases the eye down to the cave floor.
-  const eyeY = store.get('cameraY');
+  const storedY = store.get('cameraY');
+  const eyeY = Number.isFinite(storedY) ? storedY : defaults.cameraY;
   const cf = caveFloorAt(camera.x, camera.z, cave, tparams, eyeY);
   if (cf !== null) store.set('cameraY', eyeY + (cf + 1.7 - eyeY) * Math.min(1, dt * 6));
 

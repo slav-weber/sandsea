@@ -280,7 +280,7 @@ export function generateCave(params) {
     }
   }
 
-  // --- Bounds (objemlющая sphere) for shader/CPU early-out -----------------
+  // --- Bounds (enclosing sphere) for shader/CPU early-out -----------------
   let minX = 1e9, minY = 1e9, minZ = 1e9, maxX = -1e9, maxY = -1e9, maxZ = -1e9, maxR = 0;
   for (const s of segments) {
     minX = Math.min(minX, s.ax - s.ar, s.bx - s.br);

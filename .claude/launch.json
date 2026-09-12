@@ -1,0 +1,6 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    { "name": "sandsea", "runtimeExecutable": "yarn", "runtimeArgs": ["dev"], "port": 5173 }
+  ]
+}

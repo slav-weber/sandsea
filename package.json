@@ -1,0 +1,23 @@
+{
+  "name": "sandsea",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Real-time infinite desert renderer in WebGL2: SDF raymarching, procedural dunes, weather and a day cycle",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.4.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.6.0",
+    "prettier": "^3.8.3",
+    "vite": "^5.4.10"
+  },
+  "packageManager": "yarn@4.15.0"
+}

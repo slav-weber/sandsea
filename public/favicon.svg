@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" shape-rendering="crispEdges">
+  <rect width="16" height="16" fill="#0a0604"/>
+  <!-- sky -->
+  <rect y="0" width="16" height="6" fill="#3a2a52"/>
+  <rect y="2" width="16" height="4" fill="#7a4e6a"/>
+  <rect y="4" width="16" height="2" fill="#c87a5a"/>
+  <!-- sun -->
+  <rect x="10" y="3" width="3" height="3" fill="#f0c878"/>
+  <!-- distant dune -->
+  <polygon points="0,9 5,6 9,9" fill="#a8743a"/>
+  <polygon points="7,9 11,7 16,9" fill="#7e4e1e"/>
+  <!-- front dune lit side / shadow -->
+  <polygon points="0,16 0,11 8,8 16,11 16,16" fill="#d09a58"/>
+  <polygon points="8,8 16,11 16,16 12,16" fill="#7e4e1e"/>
+</svg>

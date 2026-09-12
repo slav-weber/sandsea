@@ -1,0 +1,1032 @@
+:root {
+  --border-radius-md: 6px;
+  --border-radius-lg: 10px;
+
+  --color-background:           #0a0604;
+  --color-background-secondary: #1a1108;
+  --color-background-tertiary:  #261a0d;
+  --color-border:               #3a2814;
+
+  --color-text-primary:   #f2d590;
+  --color-text-secondary: #b08858;
+  --color-text-muted:     #6f5232;
+
+  --color-accent:    #e8a04a;
+  --color-on-accent: #1a0e04;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: ui-monospace, 'Cascadia Mono', 'Consolas', 'Menlo', monospace;
+  font-size: 14px;
+  min-height: 100vh;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+}
+
+.page {
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.page-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 4px 4px 8px;
+  border-bottom: 1px solid var(--color-border);
+}
+.page-header h1 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--color-accent);
+  text-transform: uppercase;
+}
+.page-header .subtitle {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+button {
+  background: var(--color-background-tertiary);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  padding: 6px 12px;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 80ms ease, border-color 80ms ease;
+}
+button:hover { background: #2f2010; border-color: #5a3d1e; }
+button:active { transform: translateY(1px); }
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: var(--color-background-tertiary);
+  border-radius: 2px;
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  background: var(--color-accent);
+  border: 1px solid var(--color-on-accent);
+  border-radius: 50%;
+  cursor: pointer;
+}
+input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  background: var(--color-accent);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+
+.sea-app { width: 100%; }
+.sea-canvas-wrap { position: relative; }
+.sea-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  border-radius: var(--border-radius-md);
+  background: #000;
+}
+/* Bilinear upscale — soft gradients between pixels, like Sega over NTSC
+   composite. Browser default scaling is bilinear when no rule is set. */
+.sea-canvas--smooth {
+  image-rendering: auto;
+  image-rendering: smooth;
+}
+.bake-status {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 4px 10px;
+  background: rgba(0,0,0,0.65);
+  color: #fff;
+  font-size: 12px;
+  border-radius: var(--border-radius-md);
+}
+.sea-controls {
+  background: var(--color-background-secondary);
+  border-radius: var(--border-radius-lg);
+  padding: 1rem;
+  margin-top: 12px;
+  border: 1px solid var(--color-border);
+}
+.sea-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+.sea-section { display: flex; flex-direction: column; gap: 8px; }
+.sea-sec-title {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* --- Tabs --------------------------------------------------------------- */
+
+.sea-tabs { display: flex; flex-direction: column; gap: 12px; }
+
+.sea-tabs-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0;
+}
+
+.sea-tab-btn {
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  background: transparent;
+  color: var(--color-text-secondary);
+  border: 1px solid transparent;
+  border-bottom: none;
+  border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
+  cursor: pointer;
+  margin-bottom: -1px;
+  letter-spacing: 0.02em;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.sea-tab-btn:hover {
+  color: var(--color-text-primary);
+  background: var(--color-background-tertiary);
+}
+
+.sea-tab-btn.is-active {
+  color: var(--color-text-primary);
+  background: var(--color-background-secondary);
+  border-color: var(--color-border);
+  border-bottom-color: var(--color-background-secondary);
+}
+
+.sea-tab-panel {
+  display: none;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px 20px;
+  padding-top: 4px;
+}
+
+.sea-tab-panel.is-active {
+  display: grid;
+}
+
+/* Custom tab panels (Сцена / Музыка) take their own internal layout —
+   override the grid and strip nested-card chrome from the children. */
+.sea-tab-panel--custom { display: none; grid-template-columns: none; }
+.sea-tab-panel--custom.is-active { display: block; }
+
+/* Grouped tab (sub-tabs): block layout so the sub-bar spans full width and
+   only the active sub-panel uses the control grid. */
+.sea-tab-panel--grouped { display: none; grid-template-columns: none; }
+.sea-tab-panel--grouped.is-active { display: block; }
+.sea-subtabs-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 2px 0 12px;
+}
+.sea-subtab-btn {
+  padding: 4px 11px;
+  font-size: 11px;
+  background: var(--color-background-tertiary);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  transition: background 120ms ease, color 120ms ease;
+}
+.sea-subtab-btn:hover { color: var(--color-text-primary); }
+.sea-subtab-btn.is-active {
+  color: var(--color-background-primary, #0a0604);
+  background: var(--color-accent, #d98a3a);
+  border-color: var(--color-accent, #d98a3a);
+}
+.sea-subtab-panel { display: none; }
+.sea-subtab-panel.is-active {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px 20px;
+}
+.sea-tab-panel--custom .preset-bar,
+.sea-tab-panel--custom .audio-bar {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+.sea-row { display: flex; flex-direction: column; gap: 2px; }
+.sea-row-label { display: flex; justify-content: space-between; font-size: 12px; }
+.sea-row-name { color: var(--color-text-secondary); }
+.sea-row-val { color: var(--color-text-primary); font-variant-numeric: tabular-nums; }
+
+.sea-row--toggle {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+.sea-row--toggle input[type='checkbox'] {
+  accent-color: var(--color-accent);
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+}
+.sea-row--toggle .sea-row-name { font-size: 12px; }
+
+.sea-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.dpad {
+  display: inline-grid;
+  grid-template-columns: repeat(3, 36px);
+  grid-template-rows: repeat(3, 36px);
+  gap: 4px;
+}
+.dpad button { padding: 0; font-size: 16px; line-height: 1; }
+.dpad .spacer { visibility: hidden; }
+.dpad button.active {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  border-color: var(--color-accent);
+}
+
+/* --- Preset bar --------------------------------------------------------- */
+
+.preset-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  align-items: center;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+}
+
+.preset-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.preset-group-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+}
+
+.preset-btn {
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
+.share-btn {
+  margin-left: auto;
+}
+
+.preset-select {
+  background: var(--color-background-tertiary);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  font-family: inherit;
+  font-size: 12px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+/* --- Toast -------------------------------------------------------------- */
+
+.toast-stack {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.toast {
+  background: var(--color-background-tertiary);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  padding: 8px 14px;
+  font-size: 12px;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.toast--in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- HUD ---------------------------------------------------------------- */
+
+.hud {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 8px 10px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #f2d590;
+  font-size: 11px;
+  line-height: 1.4;
+  border-radius: var(--border-radius-md);
+  pointer-events: none;
+  min-width: 160px;
+  font-variant-numeric: tabular-nums;
+  transition: opacity 120ms ease;
+}
+
+.hud--hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hud-row { white-space: nowrap; }
+.hud-row span { color: #fff; }
+
+.hud-hint {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: #b08858;
+  font-size: 10px;
+  white-space: normal;
+}
+
+.pointer-lock-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: #f2d590;
+  padding: 6px 14px;
+  border-radius: var(--border-radius-md);
+  font-size: 12px;
+  pointer-events: none;
+  transition: opacity 200ms ease;
+}
+.pointer-lock-hint--hidden { opacity: 0; }
+
+.sea-canvas { cursor: crosshair; }
+
+/* Canvas fullscreen sizing: when canvas itself goes fullscreen, fill viewport */
+.sea-canvas:fullscreen {
+  width: 100vw;
+  height: 100vh;
+  object-fit: contain;
+  background: #000;
+}
+
+/* --- Audio player ------------------------------------------------------- */
+
+.audio-bar {
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.audio-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.audio-btn {
+  padding: 4px 8px;
+  font-size: 14px;
+  line-height: 1;
+  min-width: 30px;
+}
+.audio-btn.active {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  border-color: var(--color-accent);
+}
+
+.audio-title {
+  flex: 1 1 auto;
+  font-size: 12px;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 100px;
+}
+
+.audio-time {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.audio-vol {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.audio-vol input[type='range'] {
+  width: 80px;
+}
+
+.audio-progress {
+  width: 100%;
+}
+
+.audio-playlist {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 4px;
+  max-height: 260px;
+  overflow-y: auto;
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px solid var(--color-border);
+}
+
+.audio-playlist-item {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 10px;
+  font-size: 12px;
+}
+.audio-playlist-item.active {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  border-color: var(--color-accent);
+}
+.audio-playlist-item.active .audio-pl-source {
+  color: rgba(26, 14, 4, 0.7);
+}
+.audio-pl-source {
+  font-size: 10px;
+  color: var(--color-text-muted);
+}
+
+/* --- Vega: diegetic AR overlay (neurointerface) --------------------------- */
+.vega-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  font-family: 'Courier New', monospace;
+}
+.vega-reticle {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 7px; height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  border: 1px solid rgba(242, 213, 144, 0.5);
+  border-radius: 50%;
+  transition: border-color 120ms ease, transform 120ms ease;
+}
+.vega-reticle.is-active {
+  border-color: var(--color-accent);
+  transform: scale(1.5);
+  box-shadow: 0 0 6px rgba(232, 160, 74, 0.7);
+}
+.vega-focus {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, 18px);
+  white-space: nowrap;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--color-text-primary);
+  text-shadow: 0 1px 3px #000, 0 0 6px #000;
+  display: none;
+}
+.vega-sub {
+  position: absolute;
+  left: 50%; bottom: 7%;
+  transform: translateX(-50%);
+  max-width: 78%;
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  padding: 9px 14px;
+  background: rgba(10, 7, 4, 0.66);
+  border: 1px solid rgba(232, 160, 74, 0.4);   /* Ryan — amber */
+  border-radius: var(--border-radius-md);
+  backdrop-filter: blur(2px);
+}
+.vega-sub.is-vega {
+  background: rgba(8, 12, 18, 0.66);
+  border-color: rgba(120, 180, 220, 0.4);       /* Vega — cool blue */
+}
+.vega-who {
+  flex: none;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--color-accent);                   /* Ryan */
+}
+.vega-sub.is-vega .vega-who { color: #7fc8ff; } /* Vega */
+.vega-txt {
+  font-size: 13px;
+  line-height: 1.35;
+  color: #f0e2c8;
+}
+.vega-sub.is-vega .vega-txt { color: #dcecf7; }
+
+/* --- Inventory panel ------------------------------------------------------ */
+.inv-panel {
+  position: absolute;
+  left: 12px; top: 12px;
+  min-width: 180px;
+  max-width: 240px;
+  padding: 8px 10px;
+  background: rgba(10, 7, 4, 0.78);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  pointer-events: none;
+  font-family: 'Courier New', monospace;
+}
+.inv-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--color-accent);
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 5px;
+}
+.inv-list { display: flex; flex-direction: column; gap: 4px; }
+.inv-empty { font-size: 11px; color: var(--color-text-muted); }
+.inv-item {
+  font-size: 12px;
+  color: var(--color-text-primary);
+  padding: 3px 6px;
+  background: var(--color-background-tertiary);
+  border-radius: 4px;
+}
+
+/* --- App modes: menu / game / editor / settings / exit -------------------- */
+/* Visibility is driven by body[data-mode]. Defaults below assume "menu". */
+.menu-overlay,
+.menu-back,
+.menu-exit {
+  display: none;
+}
+
+/* Sandbox controls panel: only in editor + settings. */
+.sea-controls {
+  display: none;
+}
+body[data-mode='editor'] .sea-controls,
+body[data-mode='settings'] .sea-controls {
+  display: block;
+}
+
+/* HUD: editor only. */
+body:not([data-mode='editor']) .hud {
+  display: none;
+}
+
+/* Vega AR + inventory: game only. */
+.vega-layer {
+  display: none;
+}
+body[data-mode='game'] .vega-layer {
+  display: block;
+}
+body:not([data-mode='game']) .inv-panel {
+  display: none !important;
+}
+
+/* Main menu overlay. */
+body[data-mode='menu'] .menu-overlay {
+  display: flex;
+}
+.menu-overlay {
+  position: absolute;
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(
+    ellipse at 50% 38%,
+    rgba(10, 7, 4, 0.35),
+    rgba(6, 4, 2, 0.82) 75%
+  );
+  z-index: 5;
+}
+.menu-panel {
+  text-align: center;
+  padding: 24px 36px;
+}
+.menu-title {
+  margin: 0;
+  font-size: 34px;
+  letter-spacing: 0.16em;
+  font-weight: 700;
+  color: var(--color-accent);
+  text-shadow:
+    0 2px 12px #000,
+    0 0 30px rgba(232, 160, 74, 0.35);
+}
+.menu-subtitle {
+  margin: 6px 0 26px;
+  font-size: 12px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+.menu-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+.menu-btn {
+  min-width: 220px;
+  padding: 11px 18px;
+  font-size: 15px;
+  letter-spacing: 0.06em;
+  background: rgba(38, 26, 13, 0.7);
+  border: 1px solid var(--color-border);
+}
+.menu-btn:hover {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  border-color: var(--color-accent);
+}
+.menu-btn--minor {
+  min-width: 0;
+  margin-top: 10px;
+  font-size: 12px;
+  padding: 6px 12px;
+  opacity: 0.7;
+  background: transparent;
+}
+
+/* Settings: floating "back" bar over the controls panel. */
+body[data-mode='settings'] .menu-back {
+  display: block;
+}
+.menu-back {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  z-index: 6;
+}
+
+/* Exit screen. */
+body[data-mode='exit'] .menu-exit {
+  display: flex;
+}
+.menu-exit {
+  position: absolute;
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  background: #06040288;
+  color: var(--color-text-primary);
+  font-size: 16px;
+  letter-spacing: 0.08em;
+  z-index: 7;
+}
+
+/* --- Cutscene: black fade overlay + diegetic subtitles -------------------- */
+.cutscene-fade {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 8;
+  transition: opacity 60ms linear;
+}
+/* During a cutscene show Vega/Ryan subtitles, but not the gameplay reticle. */
+body[data-mode='cutscene'] .vega-layer {
+  display: block;
+}
+body[data-mode='cutscene'] .vega-reticle,
+body[data-mode='cutscene'] .vega-focus {
+  display: none;
+}
+
+/* --- Branching dialogue overlay ------------------------------------------- */
+.dlg-panel {
+  position: absolute;
+  left: 50%;
+  bottom: 48px;
+  transform: translateX(-50%);
+  width: min(680px, 84%);
+  padding: 14px 18px 12px;
+  background: rgba(10, 8, 6, 0.86);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  z-index: 9;
+  cursor: pointer;
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.55);
+}
+.dlg-line {
+  font-size: 15px;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+}
+.dlg-who {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-right: 8px;
+}
+.dlg-who--creature {
+  color: #6fe0c2;
+}
+.dlg-who--ryan {
+  color: var(--color-accent);
+}
+.dlg-who--vega {
+  color: #7fb4ff;
+}
+.dlg-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+}
+.dlg-choice {
+  text-align: left;
+  padding: 8px 12px;
+  font-size: 14px;
+  background: rgba(38, 30, 18, 0.7);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+}
+.dlg-choice:hover {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  border-color: var(--color-accent);
+}
+.dlg-hint {
+  margin-top: 10px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  text-align: right;
+}
+
+/* The HUD subtitle and dialogue panel share the bottom — hide the former while
+   a conversation is open. */
+body.dlg-open .vega-sub {
+  display: none !important;
+}
+
+/* --- Catalog palette (editor: вкладка «Каталог») ------------------------- */
+.cat-help {
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+  margin-bottom: 10px;
+}
+.cat-section {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin: 14px 0 6px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid var(--color-border);
+}
+.cat-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+.cat-card {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-align: left;
+  padding: 5px 8px;
+  font: inherit;
+  color: var(--color-text-primary);
+  background: var(--color-background-tertiary);
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.cat-card:hover {
+  border-color: var(--color-border);
+}
+.cat-card.is-selected {
+  border-color: var(--color-accent);
+}
+.cat-dot {
+  font-size: 9px;
+  line-height: 1;
+}
+.cat-dot.is-built {
+  color: #6bd08a;
+}
+.cat-dot.is-todo {
+  color: var(--color-text-secondary);
+  opacity: 0.55;
+}
+.cat-name {
+  flex: 1;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cat-tag {
+  font-size: 9px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  opacity: 0.8;
+}
+
+/* --- Boot loading screen ------------------------------------------------- */
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0a0604;
+  transition: opacity 0.4s ease;
+}
+.loading-overlay.is-done {
+  opacity: 0;
+  pointer-events: none;
+}
+.loading-box {
+  width: min(420px, 78%);
+  text-align: center;
+}
+.loading-title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--color-accent);
+  margin-bottom: 16px;
+}
+.loading-bar {
+  height: 6px;
+  background: var(--color-background-tertiary);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.loading-fill {
+  height: 100%;
+  width: 0;
+  background: var(--color-accent);
+  transition: width 0.25s ease;
+}
+.loading-sub {
+  margin-top: 12px;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: var(--color-text-secondary);
+}
+.loading-overlay.is-error .loading-title {
+  color: #ff6b6b;
+}
+.loading-overlay.is-error .loading-fill {
+  background: #ff6b6b;
+}
+
+/* --- Creature art billboard (Talven) ------------------------------------- */
+.creature-art {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 6;
+  display: none;
+}
+.creature-art-img {
+  height: 100%;
+  width: auto;
+  display: block;
+  /* Feather the art's rectangular edges into the cave murk so it reads as part
+     of the scene rather than a pasted picture — no precise cutout needed. */
+  -webkit-mask-image: radial-gradient(ellipse 58% 64% at 50% 44%, #000 52%, transparent 92%);
+  mask-image: radial-gradient(ellipse 58% 64% at 50% 44%, #000 52%, transparent 92%);
+}
+
+/* --- Editor placement gizmos (только в режиме «Редактор») ---------------- */
+.edit-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 7;
+  display: none;
+}
+body[data-mode='editor'] .edit-layer {
+  display: block;
+}
+.edit-cross {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  transform: translate(-50%, -50%);
+  opacity: 0.7;
+  background:
+    linear-gradient(var(--color-accent), var(--color-accent)) center / 2px 14px no-repeat,
+    linear-gradient(var(--color-accent), var(--color-accent)) center / 14px 2px no-repeat;
+}
+.edit-brush {
+  position: absolute;
+  left: 50%;
+  top: 10px;
+  transform: translateX(-50%);
+  padding: 4px 10px;
+  font-size: 12px;
+  white-space: nowrap;
+  color: var(--color-text-primary);
+  background: rgba(10, 7, 4, 0.8);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  display: none;
+}
+.edit-marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px 2px 5px;
+  font-size: 11px;
+  white-space: nowrap;
+  color: var(--color-text-primary);
+  background: rgba(10, 7, 4, 0.72);
+  border: 1px solid transparent;
+  border-radius: 10px;
+}
+.edit-marker.is-target {
+  border-color: var(--color-accent);
+  background: rgba(40, 28, 12, 0.86);
+}
+.edit-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
+}
+.edit-built {
+  font-size: 8px;
+  opacity: 0.85;
+}
+.edit-name {
+  font-size: 11px;
+}

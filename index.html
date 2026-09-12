@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0a0604">
+<meta name="description" content="Sandsea — an infinite desert rendered in real time in WebGL2: SDF raymarching, procedural dunes, weather, a day cycle and shareable scenes.">
+<meta property="og:title" content="Sandsea">
+<meta property="og:description" content="An infinite desert rendered in real time in WebGL2 — SDF raymarching, procedural dunes, weather and a day cycle.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<title>Sandsea — real-time desert renderer</title>
+</head>
+<body>
+<div class="page">
+  <header class="page-header">
+    <h1>Sandsea</h1>
+    <span class="subtitle">an infinite desert, raymarched in real time</span>
+  </header>
+
+  <div class="sea-app">
+    <div class="sea-canvas-wrap">
+      <canvas id="desert" class="sea-canvas" width="320" height="180"></canvas>
+    </div>
+    <div class="sea-controls">
+      <div id="controls-root"></div>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>

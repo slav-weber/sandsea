@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.vite/
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/versions
+.pnp.*
+.idea/
+.DS_Store
+*.local

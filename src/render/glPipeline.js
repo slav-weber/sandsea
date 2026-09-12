@@ -182,6 +182,8 @@ uniform float uLightRange;        // metres — soft falloff distance
 uniform vec3  uLightColor;
 
 // --- Interactive effects (driven from main.js) ---------------------------
+uniform float uBrightness;       // 0.5..1.5 multiplier on the final colour
+uniform float uSaturation;       // 0..2, 1 = untouched
 uniform float uHeatHaze;          // 0..1 — sand mirage / shimmer strength
 // Echolocation ping: an expanding shell of light from uEchoOrigin.
 uniform vec3  uEchoOrigin;
@@ -1921,6 +1923,10 @@ void main() {
     col = mix(col, lit, clamp(rainAlpha * uRainAlpha, 0.0, 1.0));
   }
 
+  // Final grade: saturation around luma, then brightness.
+  float luma = dot(col, vec3(0.2126, 0.7152, 0.0722));
+  col = mix(vec3(luma), col, uSaturation);
+  col = clamp(col * uBrightness, 0.0, 1.0);
   fragColor = vec4(col, 1.0);
 }
 `;
@@ -2263,6 +2269,8 @@ export class GlPipeline {
       lightRange: u('uLightRange'),
       lightColor: u('uLightColor'),
       heatHaze: u('uHeatHaze'),
+      brightness: u('uBrightness'),
+      saturation: u('uSaturation'),
       echoOrigin: u('uEchoOrigin'),
       echoAge: u('uEchoAge'),
       orbCount: u('uOrbCount'),
@@ -2617,6 +2625,9 @@ export class GlPipeline {
     gl.uniform1f(this.u.heroFall, hero?.fall ?? 0);
     const hc = hero?.color ?? [0.16, 0.13, 0.1];
     gl.uniform3f(this.u.heroColor, hc[0], hc[1], hc[2]);
+
+    gl.uniform1f(this.u.brightness, this.store?.get("brightness") ?? 1);
+    gl.uniform1f(this.u.saturation, this.store?.get("saturation") ?? 1);
 
     gl.drawArrays(gl.TRIANGLES, 0, 3);
   }

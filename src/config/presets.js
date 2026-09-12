@@ -10,19 +10,19 @@
 export const PRESETS = {
   morning: {
     label: 'Morning',
-    state: { timeOfDay: 6 / 24, weatherFog: 0.40 },
+    state: { timeOfDay: 6 / 24, weatherFog: 0.40, sandPalette: 'classic', skyPalette: 'sunset' },
   },
   noon: {
     label: 'Noon',
-    state: { timeOfDay: 12 / 24, weatherFog: 0.25 },
+    state: { timeOfDay: 12 / 24, weatherFog: 0.25, sandPalette: 'classic', skyPalette: 'classic' },
   },
   sunset: {
     label: 'Sunset',
-    state: { timeOfDay: 19.5 / 24, weatherFog: 0.55 },
+    state: { timeOfDay: 19.5 / 24, weatherFog: 0.55, sandPalette: 'sunset', skyPalette: 'sunset' },
   },
   night: {
     label: 'Night',
-    state: { timeOfDay: 1 / 24, weatherFog: 0.20 },
+    state: { timeOfDay: 1 / 24, weatherFog: 0.20, sandPalette: 'night', skyPalette: 'night' },
   },
 };
 

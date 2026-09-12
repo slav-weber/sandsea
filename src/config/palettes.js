@@ -25,7 +25,7 @@ export const SAND_PALETTES = {
     '#a8462a', '#d97a3a', '#f0a85a',
     '#f8c878', '#fce0a0',
   ],
-  duneNight: [
+  night: [
     '#1c0e24', '#301a36', '#46284a',
     '#5e3a5e', '#7c5070', '#9a6c84',
     '#b88a98', '#d4a8ae',
@@ -60,7 +60,7 @@ export const SKY_PALETTES = {
 
 
 
-  duneNight: [
+  night: [
     [0.0, [28, 18, 52]],
     [0.2, [28, 18, 52]],
     [0.4, [28, 18, 52]],
@@ -125,11 +125,11 @@ export function sampleSkyPalette(stops, t) {
 
 /**
  * Map timeOfDay ∈ [0..1] to a pair of palette names + interpolation factor.
- * 0    = midnight  (duneNight)
+ * 0    = midnight  (night)
  * 0.25 = sunrise   (sunset palette, the same look)
  * 0.5  = noon      (classic)
  * 0.75 = sunset    (sunset)
- * 1    = midnight  (duneNight) — wraps to 0
+ * 1    = midnight  (night) — wraps to 0
  */
 // Phase keys aligned to Izmail (45.36°N) at summer solstice. Key
 // astronomical events:
@@ -147,16 +147,16 @@ export function sampleSkyPalette(stops, t) {
 //   golden hour PM   [0.78..0.84]    sunset palette holds
 //   post-sunset      (0.84..0.92)    sunset → night
 const PHASE_KEYS = [
-  { t: 0.00, palette: 'duneNight' },
-  { t: 0.13, palette: 'duneNight' },  // 03:07
+  { t: 0.00, palette: 'night' },
+  { t: 0.13, palette: 'night' },  // 03:07
   { t: 0.17, palette: 'sunset' },     // 04:05 pre-sunrise
   { t: 0.22, palette: 'sunset' },     // 05:17 golden hour
   { t: 0.30, palette: 'classic' },    // 07:12 morning daylight
   { t: 0.70, palette: 'classic' },    // 16:48 afternoon daylight
   { t: 0.78, palette: 'sunset' },     // 18:43 golden hour
   { t: 0.84, palette: 'sunset' },     // 20:10 post-sunset
-  { t: 0.92, palette: 'duneNight' },  // 22:05 deep twilight
-  { t: 1.00, palette: 'duneNight' },
+  { t: 0.92, palette: 'night' },  // 22:05 deep twilight
+  { t: 1.00, palette: 'night' },
 ];
 
 function phaseSegment(t) {
@@ -169,7 +169,7 @@ function phaseSegment(t) {
       return { from: a.palette, to: b.palette, blend: eased };
     }
   }
-  return { from: 'duneNight', to: 'duneNight', blend: 0 };
+  return { from: 'night', to: 'night', blend: 0 };
 }
 
 export function blendedSandStops(t) {

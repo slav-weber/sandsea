@@ -103,6 +103,13 @@ function onAffect(kind) {
 store.subscribe('sandPalette', () => pipeline.invalidateSand());
 store.subscribe('skyPalette', () => pipeline.invalidateSky());
 
+// Pixel smoothing is a CSS filter on the canvas, not a shader pass.
+function applyPixelation() {
+  canvas.classList.toggle('sea-canvas--smooth', !!store.get('smoothPixels'));
+}
+store.subscribe('smoothPixels', applyPixelation);
+applyPixelation();
+
 mountControls(controlsRoot, store, onAffect, {
   beforeTabs: [{ name: 'Scene', mount: (panel) => mountPresets(panel, store, { onToast: toast }) }],
   actions: {
@@ -162,7 +169,25 @@ function frame(now) {
   if (!store.get('paused')) {
     const sinY = Math.sin(camera.yaw);
     const cosY = Math.cos(camera.yaw);
-    const sp = store.get('cameraSpeed') * (axes.boost > 0.5 ? 60 : 20) * dt;
+    const walking = store.get('cameraMode') === 'game';
+    // Walking is a human pace: 1.4 m/s, jogging 3.6. Free flight is fast —
+    // the base speed is what used to need Shift, and Shift is now a sprint.
+    const sp = walking
+      ? (axes.boost > 0.5 ? 3.6 : 1.4) * dt
+      : store.get('cameraSpeed') * (axes.boost > 0.5 ? 150 : 60) * dt;
+
+    if (walking) {
+      if (axes.forward !== 0 || axes.strafe !== 0) {
+        camera.move(
+          (axes.forward * sinY + axes.strafe * cosY) * sp,
+          (axes.forward * cosY + axes.strafe * -sinY) * sp,
+        );
+      }
+      // Eye height follows the ground, or the cave floor when inside one.
+      const groundY = heightAt(camera.x, camera.z, tparams);
+      const floor = caveFloorAt(camera.x, camera.z, cave, tparams, store.get('cameraY'));
+      store.set('cameraY', (floor !== null ? floor : groundY) + 1.7);
+    } else {
     // Free flight: forward follows the look direction, so pitching up and
     // holding W climbs. Strafing stays horizontal, as it should.
     const cosP = Math.cos(camera.pitch);
@@ -173,11 +198,12 @@ function frame(now) {
       camera.move((fwd * sinY + axes.strafe * cosY) * sp, (fwd * cosY + axes.strafe * -sinY) * sp);
       dy += axes.forward * sinP * sp;
     }
-    dy += axes.up * sp;
-    if (dy !== 0) {
-      const y = store.get('cameraY');
-      const base = Number.isFinite(y) ? y : defaults.cameraY;
-      store.set('cameraY', Math.max(1, Math.min(400, base + dy)));
+      dy += axes.up * sp;
+      if (dy !== 0) {
+        const y = store.get('cameraY');
+        const base = Number.isFinite(y) ? y : defaults.cameraY;
+        store.set('cameraY', Math.max(1, Math.min(400, base + dy)));
+      }
     }
   }
 

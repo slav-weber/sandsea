@@ -16,6 +16,7 @@ import {
  * Subsequent milestones port real dunes/sun/shadows/caves into the shader.
  */
 
+const CLOUD_DRIFT = 0.08; // clouds move at 8% of wind speed — see uCloudWind
 const SAND_N = 64;
 const SKY_N = 64;
 
@@ -2443,7 +2444,9 @@ export class GlPipeline {
     gl.uniform1f(this.u.cloudAltitude, w.cloudAltitudeM ?? 3000);
     gl.uniform1f(this.u.cloudScale, w.cloudScale ?? 800);
     gl.uniform1f(this.u.cloudMorphSpeed, w.cloudMorphSpeed ?? 0.04);
-    gl.uniform2f(this.u.cloudWind, w.windDirX * w.windSpeed, w.windDirZ * w.windSpeed);
+    // Clouds drift far slower than the wind at ground level reads — the sky is
+    // huge, so a 1:1 mapping makes it race. CLOUD_DRIFT is that scale factor.
+    gl.uniform2f(this.u.cloudWind, w.windDirX * w.windSpeed * CLOUD_DRIFT, w.windDirZ * w.windSpeed * CLOUD_DRIFT);
     gl.uniform1f(this.u.fog, Math.max(0, Math.min(1, fog)));
 
     // Rain wind tilt — project world wind onto camera's right vector,

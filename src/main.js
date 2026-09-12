@@ -126,6 +126,13 @@ bindPointer(canvas, store, camera);
 
 let lastFrameT = performance.now();
 let gameSeconds = store.get('timeOfDay') * 86400;
+// The clock and the slider write to the same key. This flag tells them apart:
+// a write from the slider re-anchors the clock instead of being overwritten.
+let clockWrite = false;
+store.subscribe('timeOfDay', (v) => {
+  if (clockWrite || !Number.isFinite(v)) return;
+  gameSeconds = v * 86400;
+});
 
 function frame(now) {
   if (now == null) now = performance.now();
@@ -156,18 +163,30 @@ function frame(now) {
     const sinY = Math.sin(camera.yaw);
     const cosY = Math.cos(camera.yaw);
     const sp = store.get('cameraSpeed') * (axes.boost > 0.5 ? 60 : 20) * dt;
+    // Free flight: forward follows the look direction, so pitching up and
+    // holding W climbs. Strafing stays horizontal, as it should.
+    const cosP = Math.cos(camera.pitch);
+    const sinP = Math.sin(camera.pitch);
+    let dy = 0;
     if (axes.forward !== 0 || axes.strafe !== 0) {
-      camera.move((axes.forward * sinY + axes.strafe * cosY) * sp, (axes.forward * cosY + axes.strafe * -sinY) * sp);
+      const fwd = axes.forward * cosP;
+      camera.move((fwd * sinY + axes.strafe * cosY) * sp, (fwd * cosY + axes.strafe * -sinY) * sp);
+      dy += axes.forward * sinP * sp;
     }
-    if (axes.up !== 0) {
+    dy += axes.up * sp;
+    if (dy !== 0) {
       const y = store.get('cameraY');
       const base = Number.isFinite(y) ? y : defaults.cameraY;
-      store.set('cameraY', Math.max(1, Math.min(400, base + axes.up * sp)));
+      store.set('cameraY', Math.max(1, Math.min(400, base + dy)));
     }
   }
 
-  if (store.get('dayCycleEnabled')) {
+  // The clock writes back only while it is running; otherwise the slider owns
+  // the value and would be overwritten on the very next frame.
+  if (store.get('dayCycleEnabled') && !store.get('paused')) {
+    clockWrite = true;
     store.set('timeOfDay', (gameSeconds / 86400) % 1);
+    clockWrite = false;
   }
   applySunState();
   applyWeatherOverrides();

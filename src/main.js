@@ -121,7 +121,7 @@ const hud = mountHud(canvasWrap, store, {
   getAxes: () => axes,
 });
 
-bindKeyboard(store, { canvas, hud, toast, getMode: () => 'free' });
+bindKeyboard(store, { canvas, hud, toast, getMode: () => 'editor' });
 bindPointer(canvas, store, camera);
 
 let lastFrameT = performance.now();

@@ -640,17 +640,11 @@ body:not([data-mode='editor']) .hud {
 .vega-layer {
   display: none;
 }
-body[data-mode='game'] .vega-layer {
-  display: block;
-}
-body:not([data-mode='game']) .inv-panel {
-  display: none !important;
-}
+
+
 
 /* Main menu overlay. */
-body[data-mode='menu'] .menu-overlay {
-  display: flex;
-}
+
 .menu-overlay {
   position: absolute;
   inset: 0;
@@ -724,9 +718,7 @@ body[data-mode='settings'] .menu-back {
 }
 
 /* Exit screen. */
-body[data-mode='exit'] .menu-exit {
-  display: flex;
-}
+
 .menu-exit {
   position: absolute;
   inset: 0;
@@ -750,13 +742,8 @@ body[data-mode='exit'] .menu-exit {
   transition: opacity 60ms linear;
 }
 /* During a cutscene show Vega/Ryan subtitles, but not the gameplay reticle. */
-body[data-mode='cutscene'] .vega-layer {
-  display: block;
-}
-body[data-mode='cutscene'] .vega-reticle,
-body[data-mode='cutscene'] .vega-focus {
-  display: none;
-}
+
+
 
 /* --- Branching dialogue overlay ------------------------------------------- */
 .dlg-panel {

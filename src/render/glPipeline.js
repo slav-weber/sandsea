@@ -1931,6 +1931,14 @@ void main() {
 }
 `;
 
+// A cheaper twin of the shader above: fewer trace and shadow steps. The driver
+// unrolls far less, so it links in a fraction of the time and the first frame
+// can be drawn while the full shader is still linking in the background.
+// Same uniforms, same scene — just coarser silhouettes and softer shadows.
+const FRAG_FAST = FRAG_SRC
+  .replace('const int   MAX_STEPS   = 192;', 'const int   MAX_STEPS   = 64;')
+  .replace('const int   SHADOW_STEPS = 28;', 'const int   SHADOW_STEPS = 8;');
+
 // ---------------------------------------------------------------------------
 // Sun projection + colors (port from src/render/sun.js)
 // ---------------------------------------------------------------------------
@@ -2159,10 +2167,15 @@ export class GlPipeline {
     // freezing for seconds. Finalised in _finishInit() once pollReady() sees
     // completion.
     this._parallelExt = gl.getExtension('KHR_parallel_shader_compile');
-    const linked = linkProgramAsync(gl, VERT_SRC, FRAG_SRC);
-    this.program = linked.prog;
-    this._vs = linked.vs;
-    this._fs = linked.fs;
+    // Two programs link side by side. The preview is cheap enough to be ready
+    // in about a second, so the desert appears almost at once; the full shader
+    // takes far longer and swaps itself in silently when it lands.
+    const preview = linkProgramAsync(gl, VERT_SRC, FRAG_FAST);
+    this.program = preview.prog;
+    this._vs = preview.vs;
+    this._fs = preview.fs;
+    this._full = linkProgramAsync(gl, VERT_SRC, FRAG_SRC);
+    this._fullReady = false;
     this._ready = false;
     this._sawPoll = false;
     this._initError = null;
@@ -2193,8 +2206,18 @@ export class GlPipeline {
     gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
 
     // Uniform locations
-    const u = (name) => gl.getUniformLocation(this.program, name);
-    this.u = {
+    this.u = this._buildUniformMap(this.program);
+
+    // Reusable buffers — avoid per-frame allocation.
+    this._initBuffersAndTextures();
+  }
+
+  // Look up every uniform for a given program. Two programs are linked (a fast
+  // preview and the full shader), and each needs its own location map.
+  _buildUniformMap(program) {
+    const gl = this.gl;
+    const u = (name) => gl.getUniformLocation(program, name);
+    return {
       res: u('uRes'),
       eye: u('uEye'),
       yaw: u('uYaw'),
@@ -2286,6 +2309,12 @@ export class GlPipeline {
       heroFall: u('uHeroFall'),
       heroColor: u('uHeroColor'),
     };
+  }
+
+  // Buffers and textures belong to the context, not to a program, so they are
+  // built once and shared by both the preview and the full shader.
+  _initBuffersAndTextures() {
+    const gl = this.gl;
 
     // Reusable buffers — avoid per-frame allocation.
     this._npcBuf   = new Float32Array(16 * 4);
@@ -2363,6 +2392,34 @@ export class GlPipeline {
     return this._ready;
   }
 
+  // Called from render() once the preview is up: swap in the full shader the
+  // moment it finishes linking. A failure is not fatal — the preview keeps
+  // drawing and the reason goes to the console.
+  _pollFullProgram() {
+    if (this._fullReady || !this._full) return;
+    const gl = this.gl;
+    const ext = this._parallelExt;
+    if (ext && !gl.getProgramParameter(this._full.prog, ext.COMPLETION_STATUS_KHR)) return;
+    try {
+      checkProgram(gl, this._full.prog, this._full.vs, this._full.fs);
+      this.program = this._full.prog;
+      this.u = this._buildUniformMap(this.program);
+      gl.useProgram(this.program);
+      gl.bindVertexArray(this.vao);
+      const aPos = gl.getAttribLocation(this.program, 'aPos');
+      gl.enableVertexAttribArray(aPos);
+      gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+      // Texture units are per-program state; re-point the samplers.
+      gl.uniform1i(this.u.sandPal, 1);
+      gl.uniform1i(this.u.skyPal, 2);
+      gl.uniform1i(this.u.rainDropsTex, 4);
+    } catch (e) {
+      console.warn('Sandsea: the full shader did not link; staying on the preview.', e);
+    }
+    this._fullReady = true;
+    this._full = null;
+  }
+
   setNightLevel(n) {
     this._nightLevel = n;
   }
@@ -2381,6 +2438,7 @@ export class GlPipeline {
 
   render({ camera, sun, npcs = [], solids = [], placements = [], cave = null, light = null, spawnPlateauY = 0, fx = null, weather = null, time = null, fog = 0.3, bolt = null, rain = null, hero = null }) {
     if (!this._ready) return; // shader still compiling — frame loop shows the loader
+    this._pollFullProgram(); // upgrade to the full shader as soon as it lands
     const gl = this.gl;
     const s = this.store.get();
 
